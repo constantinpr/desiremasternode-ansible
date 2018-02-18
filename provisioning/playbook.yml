@@ -1,0 +1,9 @@
+- name: Install Desire MN
+  hosts: desiremn
+  user: vagrant
+  become: yes
+  become_method: sudo
+  tasks:
+
+  roles:
+    - desiremn

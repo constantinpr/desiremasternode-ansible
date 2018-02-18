@@ -1,0 +1,6 @@
+---
+
+- name: start desire deamon
+  command: "./desired -daemon"
+  args:
+   chdir: /home/vagrant/Desire/

@@ -1,0 +1,6 @@
+---
+# tasks file for desiremn
+- include: installpackages.yml
+- include: configuration.yml
+- include: ubuntufirewall.yml
+- include: startdeamon.yml

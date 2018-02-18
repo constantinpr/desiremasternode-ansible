@@ -1,0 +1,90 @@
+---
+
+- name: Check if Desire fodler already exists
+  stat: path=/home/vagrant/Desire
+  register: f
+
+- name: Clone git repo
+  git:
+    repo: https://github.com/lazyboozer/Desire.git
+    dest: /home/vagrant/Desire
+  when: not f.stat.exists
+
+- name: Change authogen.sh permissions
+  file:
+    path: /home/vagrant/Desire/autogen.sh
+    mode: 0755
+
+- name: Run scripts .autogen.sh
+  command: "./autogen.sh"
+  args:
+   chdir: /home/vagrant/Desire/
+
+- name: Run scripts ./configure
+  command: "./configure"
+  args:
+   chdir: /home/vagrant/Desire/
+  become: true
+  become_user: root
+  ignore_errors: yes
+
+- name: Change genbuild.sh permissions
+  file:
+    path: /home/vagrant/Desire/share/genbuild.sh
+    mode: 0755
+
+- name: print to stdout
+  command: echo "Make command will take a while to run so please be patient"
+
+#- name: Run make command
+#  make:
+#    chdir: /home/vagrant/Desire/
+#  become: yes
+
+- name: Check if Desire download already exists
+  stat: path=/home/vagrant/desire-0.12.2.1-linux.tar.gz
+  register: d
+
+- name: Download {{desirepackage}}
+  get_url:
+    url: https://github.com/lazyboozer/Desire/releases/download/Desire-v.0.12.2.1/{{desirepackage}}
+    dest: /home/vagrant/
+  when: not d.stat.exists
+
+- name: Extract {{desirepackage}} into ~/Desire
+  unarchive:
+    src: /home/vagrant/{{desirepackage}}
+    dest: /home/vagrant/Desire
+    remote_src: yes
+
+- name: Check if .desirecore already exists
+  stat: path=/home/vagrant/.desirecore
+  register: des
+
+- name: Create .desirecore
+  file: path=/home/vagrant/.desirecore state=directory
+  when: not des.stat.exists
+
+- name: Check if sentinel-lin64 download already exists
+  stat: path=/home/vagrant/.desirecore/sentinel-lin64
+  register: ent
+
+- name: Download sentinel-lin64
+  get_url:
+    url: https://github.com/ZonnCash/sentinel/releases/download/v1.1.0-win64/sentinel-lin64
+    dest: /home/vagrant/.desirecore
+  when: not ent.stat.exists
+
+- name: Changing perm of "sentinel-lin64", adding "+x"
+  file: dest=/home/vagrant/.desirecore/sentinel-lin64 mode=a+x
+
+- name: Echo line into sentinel.conf
+  shell: |
+      echo "{{item}}" >> /home/vagrant/.desirecore/sentinel.conf
+  with_items:
+    - desire_conf='pwd'/desire.conf
+
+- name: Copy desire.conf template
+  template:
+    src: desire.conf.j2
+    dest: /home/vagrant/.desirecore/desire.conf

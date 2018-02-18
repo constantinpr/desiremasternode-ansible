@@ -1,0 +1,7 @@
+---
+
+- name: Open ubuntu firewall for port 9919
+  ufw:
+   rule: allow
+   port: 9919
+   proto: tcp

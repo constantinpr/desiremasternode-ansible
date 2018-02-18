@@ -1,0 +1,47 @@
+---
+- name: Update and upgrade ubuntu
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install required packages
+  apt: name={{ item }} state=present
+  with_items:
+    - nano
+    - htop
+    - git
+    - build-essential
+    - libtool
+    - automake
+    - autoconf
+    - autogen
+    - autotools-dev
+    - autoconf
+    - pkg-config
+    - libssl-dev
+    - libssl-dev
+    - libevent-dev
+    - bsdmainutils
+    - software-properties-common
+    - libgmp3-dev
+    - libevent-dev
+    - bsdmainutils
+    - libboost-all-dev
+
+- name: Add apt repository
+  apt_repository:
+    repo: 'ppa:bitcoin/bitcoin'
+
+- name: Update installed packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install libraries
+  apt: name={{ item }} state=present
+  with_items:
+    - libdb4.8-dev
+    - libdb4.8++-dev
+    - libminiupnpc-dev

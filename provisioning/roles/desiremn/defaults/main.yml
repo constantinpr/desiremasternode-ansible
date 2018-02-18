@@ -1,0 +1,8 @@
+---
+# defaults file for desiremn
+masternodeprivkey: yourmasterkey_goes_here
+server_ip: 192.168.0.1
+user: testuser
+password: testpassword
+
+desirepackage: desire-0.12.2.1-linux.tar.gz
