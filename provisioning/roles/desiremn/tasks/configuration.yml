@@ -36,10 +36,10 @@
 - name: print to stdout
   command: echo "Make command will take a while to run so please be patient"
 
-#- name: Run make command
-#  make:
-#    chdir: /home/vagrant/Desire/
-#  become: yes
+- name: Run make command
+  make:
+    chdir: /home/vagrant/Desire/
+  become: yes
 
 - name: Check if Desire download already exists
   stat: path=/home/vagrant/desire-0.12.2.1-linux.tar.gz
